@@ -1,98 +1,145 @@
 from abc import ABC, abstractmethod
 
 
-class Student:
-    def __init__(self, id_, firstname_, lastname_, dob_, address_, phone_):
-        self.__id = id_
-        self.__firstname = firstname_
-        self.__lastname = lastname_
-        self.__dob = dob_
-        self.__address = address_
-        self.__phone = phone_
+class House:
+    def __init__(self, basement_, structure_, roof_, interior_):
+        self.__basement = basement_
+        self.__structure = structure_
+        self.__roof = roof_
+        self.__interior = interior_
 
     def __str__(self):
-        return f"{self.__id}, {self.__firstname}, {self.__lastname}, {self.__dob}, {self.__address}, {self.__phone}"
+        return f"{self.__basement}, {self.__structure}, {self.__roof}, {self.__interior}"
+
+    @property
+    def basement(self):
+        return self.__basement
+
+    @basement.setter
+    def basement(self, value_):
+        self.__basement = value_
+
+    @property
+    def structure(self):
+        return self.__structure
+
+    @structure.setter
+    def structure(self, value_):
+        self.__structure = value_
+
+    @property
+    def roof(self):
+        return self.__roof
+
+    @roof.setter
+    def roof(self, value_):
+        self.__roof = value_
+
+    @property
+    def interior(self):
+        return self.__interior
+
+    @interior.setter
+    def interior(self, value_):
+        self.__interior = value_
 
 
-class StudentBuilder(ABC):
+class HouseBuilder(ABC):
     @abstractmethod
-    def set_id(self, id_):
+    def build_basement(self):
         pass
 
     @abstractmethod
-    def set_firstname(self, firstname_):
+    def build_structure(self):
         pass
 
     @abstractmethod
-    def set_lastname(self, lastname_):
+    def build_roof(self):
         pass
 
     @abstractmethod
-    def set_dob(self, dob_):
+    def build_interior(self):
         pass
 
     @abstractmethod
-    def set_address(self, address_):
-        pass
-
-    @abstractmethod
-    def set_phone(self, phone_):
-        pass
-
-    @abstractmethod
-    def build(self):
+    def get_house(self):
         pass
 
 
-class StudentConcreteBuilder(StudentBuilder):
+class IglooHouseBuilder(HouseBuilder):
     def __init__(self):
-        self.__id = None
-        self.__firstname = None
-        self.__lastname = None
-        self.__dob = None
-        self.__address = None
-        self.__phone = None
+        self.__basement = None
+        self.__structure = None
+        self.__roof = None
+        self.__interior = None
 
-    def set_id(self, id_):
-        self.__id = id_
-        return self
+    def build_basement(self):
+        self.__basement = "Ice Bars"
 
-    def set_firstname(self, firstname_):
-        self.__firstname = firstname_
-        return self
+    def build_structure(self):
+        self.__structure = "Ice Blocks"
 
-    def set_lastname(self, lastname_):
-        self.__lastname = lastname_
-        return self
+    def build_roof(self):
+        self.__roof = "Ice Dome"
 
-    def set_dob(self, dob_):
-        self.__dob = dob_
-        return self
+    def build_interior(self):
+        self.__interior = "Ice Carvings"
 
-    def set_address(self, address_):
-        self.__address = address_
-        return self
+    def get_house(self):
+        return House(self.__basement, self.__structure, self.__roof, self.__interior)
 
-    def set_phone(self, phone_):
-        self.__phone = phone_
-        return self
 
-    def build(self):
-        return Student(self.__id, self.__firstname, self.__lastname, self.__dob, self.__address, self.__phone)
+class TipiHouseBuilder(HouseBuilder):
+    def __init__(self):
+        self.__basement = None
+        self.__structure = None
+        self.__roof = None
+        self.__interior = None
+
+    def build_basement(self):
+        self.__basement = "Wooden Poles"
+
+    def build_structure(self):
+        self.__structure = "Wood and Ice"
+
+    def build_roof(self):
+        self.__roof = "Wood, caribou and seal skins"
+
+    def build_interior(self):
+        self.__interior = "Fire Wood"
+
+    def get_house(self):
+        return House(self.__basement, self.__structure, self.__roof, self.__interior)
+
+
+class HouseDirector:
+    def __init__(self, housebuilder_):
+        self.__housebuilder = housebuilder_
+
+    def get_house(self):
+        return self.__housebuilder.get_house()
+
+    def build_full_house(self):
+        self.__housebuilder.build_basement()
+        self.__housebuilder.build_structure()
+        self.__housebuilder.build_roof()
+        self.__housebuilder.build_interior()
+
+    def build_basement_only(self):
+        self.__housebuilder.build_basement()
+
+    def build_structure_only(self):
+        self.__housebuilder.build_structure()
+
+    def build_roof_only(self):
+        self.__housebuilder.build_roof()
+
+    def build_interior_only(self):
+        self.__housebuilder.build_interior()
 
 
 if __name__ == "__main__":
-    student_builder1 = StudentConcreteBuilder()\
-        .set_id(1)\
-        .set_firstname("Nhan")\
-        .set_lastname("Nguyen")
-    student1 = student_builder1.build()
-    print(student1)
-
-    student_builder2 = StudentConcreteBuilder()\
-        .set_id(2)\
-        .set_firstname("Tom")\
-        .set_lastname("Jerry")\
-        .set_phone("0123")
-    student2 = student_builder2.build()
-    print(student2)
+    igloo_house_builder = IglooHouseBuilder()
+    house_director = HouseDirector(igloo_house_builder)
+    house_director.build_full_house()
+    print(house_director.get_house())
