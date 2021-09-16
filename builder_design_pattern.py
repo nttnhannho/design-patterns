@@ -2,46 +2,14 @@ from abc import ABC, abstractmethod
 
 
 class House:
-    def __init__(self, basement_, structure_, roof_, interior_):
-        self.__basement = basement_
-        self.__structure = structure_
-        self.__roof = roof_
-        self.__interior = interior_
+    def __init__(self):
+        self.__parts = []
+
+    def build_part(self, part_):
+        self.__parts.append(part_)
 
     def __str__(self):
-        return f"{self.__basement}, {self.__structure}, {self.__roof}, {self.__interior}"
-
-    @property
-    def basement(self):
-        return self.__basement
-
-    @basement.setter
-    def basement(self, value_):
-        self.__basement = value_
-
-    @property
-    def structure(self):
-        return self.__structure
-
-    @structure.setter
-    def structure(self, value_):
-        self.__structure = value_
-
-    @property
-    def roof(self):
-        return self.__roof
-
-    @roof.setter
-    def roof(self, value_):
-        self.__roof = value_
-
-    @property
-    def interior(self):
-        return self.__interior
-
-    @interior.setter
-    def interior(self, value_):
-        self.__interior = value_
+        return ', '.join(self.__parts)
 
 
 class HouseBuilder(ABC):
@@ -62,62 +30,74 @@ class HouseBuilder(ABC):
         pass
 
     @abstractmethod
-    def get_house(self):
+    def build(self):
         pass
 
 
 class IglooHouseBuilder(HouseBuilder):
     def __init__(self):
-        self.__basement = None
-        self.__structure = None
-        self.__roof = None
-        self.__interior = None
+        self.__reset()
+
+    def __reset(self):
+        self.__house = House()
 
     def build_basement(self):
-        self.__basement = "Ice Bars"
+        self.__house.build_part("Ice Bars")
 
     def build_structure(self):
-        self.__structure = "Ice Blocks"
+        self.__house.build_part("Ice Blocks")
 
     def build_roof(self):
-        self.__roof = "Ice Dome"
+        self.__house.build_part("Ice Dome")
 
     def build_interior(self):
-        self.__interior = "Ice Carvings"
+        self.__house.build_part("Ice Carvings")
 
-    def get_house(self):
-        return House(self.__basement, self.__structure, self.__roof, self.__interior)
+    def build(self):
+        house_ = self.__house
+        self.__reset()
+        return house_
 
 
 class TipiHouseBuilder(HouseBuilder):
     def __init__(self):
-        self.__basement = None
-        self.__structure = None
-        self.__roof = None
-        self.__interior = None
+        self.__reset()
+
+    def __reset(self):
+        self.__house = House()
 
     def build_basement(self):
-        self.__basement = "Wooden Poles"
+        self.__house.build_part("Wooden Poles")
 
     def build_structure(self):
-        self.__structure = "Wood and Ice"
+        self.__house.build_part("Wood and Ice")
 
     def build_roof(self):
-        self.__roof = "Wood, caribou and seal skins"
+        self.__house.build_part("Wood, caribou and seal skins")
 
     def build_interior(self):
-        self.__interior = "Fire Wood"
+        self.__house.build_part("Fire Wood")
 
-    def get_house(self):
-        return House(self.__basement, self.__structure, self.__roof, self.__interior)
+    def build(self):
+        house_ = self.__house
+        self.__reset()
+        return house_
 
 
 class HouseDirector:
-    def __init__(self, housebuilder_):
-        self.__housebuilder = housebuilder_
+    def __init__(self):
+        self.__housebuilder = None
+
+    @property
+    def housebuilder(self):
+        return self.__housebuilder
+
+    @housebuilder.setter
+    def housebuilder(self, value_):
+        self.__housebuilder = value_
 
     def get_house(self):
-        return self.__housebuilder.get_house()
+        return self.__housebuilder.build()
 
     def build_full_house(self):
         self.__housebuilder.build_basement()
@@ -139,7 +119,52 @@ class HouseDirector:
 
 
 if __name__ == "__main__":
+    house_director = HouseDirector()
+
+    print("Igloo house:")
     igloo_house_builder = IglooHouseBuilder()
-    house_director = HouseDirector(igloo_house_builder)
+    house_director.housebuilder = igloo_house_builder
     house_director.build_full_house()
-    print(house_director.get_house())
+    house = house_director.get_house()
+    print(f"Full house: {house}")
+
+    house_director.build_basement_only()
+    house = house_director.get_house()
+    print(f"Basement only house: {house}")
+
+    house_director.build_structure_only()
+    house = house_director.get_house()
+    print(f"Structure only house: {house}")
+
+    house_director.build_roof_only()
+    house = house_director.get_house()
+    print(f"Roof only house: {house}")
+
+    house_director.build_interior_only()
+    house = house_director.get_house()
+    print(f"Interior only house: {house}")
+
+    print("*" * 50)
+
+    print("Tipi house:")
+    tipi_house_builder = TipiHouseBuilder()
+    house_director.housebuilder = tipi_house_builder
+    house_director.build_full_house()
+    house = house_director.get_house()
+    print(f"Full house: {house}")
+
+    house_director.build_basement_only()
+    house = house_director.get_house()
+    print(f"Basement only house: {house}")
+
+    house_director.build_structure_only()
+    house = house_director.get_house()
+    print(f"Structure only house: {house}")
+
+    house_director.build_roof_only()
+    house = house_director.get_house()
+    print(f"Roof only house: {house}")
+
+    house_director.build_interior_only()
+    house = house_director.get_house()
+    print(f"Interior only house: {house}")
