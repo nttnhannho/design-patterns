@@ -1,42 +1,32 @@
 from abc import ABC, abstractmethod
 
 
-class Student:
-    def __init__(self, id_, firstname_, lastname_, dob_, address_, phone_):
-        self.__id = id_
-        self.__firstname = firstname_
-        self.__lastname = lastname_
-        self.__dob = dob_
-        self.__address = address_
-        self.__phone = phone_
+class House:
+    def __init__(self):
+        self.__parts = []
+
+    def build_part(self, part_):
+        self.__parts.append(part_)
 
     def __str__(self):
-        return f"{self.__id}, {self.__firstname}, {self.__lastname}, {self.__dob}, {self.__address}, {self.__phone}"
+        return ', '.join(self.__parts)
 
 
-class StudentBuilder(ABC):
+class HouseBuilder(ABC):
     @abstractmethod
-    def set_id(self, id_):
+    def build_basement(self):
         pass
 
     @abstractmethod
-    def set_firstname(self, firstname_):
+    def build_structure(self):
         pass
 
     @abstractmethod
-    def set_lastname(self, lastname_):
+    def build_roof(self):
         pass
 
     @abstractmethod
-    def set_dob(self, dob_):
-        pass
-
-    @abstractmethod
-    def set_address(self, address_):
-        pass
-
-    @abstractmethod
-    def set_phone(self, phone_):
+    def build_interior(self):
         pass
 
     @abstractmethod
@@ -44,55 +34,137 @@ class StudentBuilder(ABC):
         pass
 
 
-class StudentConcreteBuilder(StudentBuilder):
+class IglooHouseBuilder(HouseBuilder):
     def __init__(self):
-        self.__id = None
-        self.__firstname = None
-        self.__lastname = None
-        self.__dob = None
-        self.__address = None
-        self.__phone = None
+        self.__reset()
 
-    def set_id(self, id_):
-        self.__id = id_
-        return self
+    def __reset(self):
+        self.__house = House()
 
-    def set_firstname(self, firstname_):
-        self.__firstname = firstname_
-        return self
+    def build_basement(self):
+        self.__house.build_part("Ice Bars")
 
-    def set_lastname(self, lastname_):
-        self.__lastname = lastname_
-        return self
+    def build_structure(self):
+        self.__house.build_part("Ice Blocks")
 
-    def set_dob(self, dob_):
-        self.__dob = dob_
-        return self
+    def build_roof(self):
+        self.__house.build_part("Ice Dome")
 
-    def set_address(self, address_):
-        self.__address = address_
-        return self
-
-    def set_phone(self, phone_):
-        self.__phone = phone_
-        return self
+    def build_interior(self):
+        self.__house.build_part("Ice Carvings")
 
     def build(self):
-        return Student(self.__id, self.__firstname, self.__lastname, self.__dob, self.__address, self.__phone)
+        house_ = self.__house
+        self.__reset()
+        return house_
+
+
+class TipiHouseBuilder(HouseBuilder):
+    def __init__(self):
+        self.__reset()
+
+    def __reset(self):
+        self.__house = House()
+
+    def build_basement(self):
+        self.__house.build_part("Wooden Poles")
+
+    def build_structure(self):
+        self.__house.build_part("Wood and Ice")
+
+    def build_roof(self):
+        self.__house.build_part("Wood, caribou and seal skins")
+
+    def build_interior(self):
+        self.__house.build_part("Fire Wood")
+
+    def build(self):
+        house_ = self.__house
+        self.__reset()
+        return house_
+
+
+class HouseDirector:
+    def __init__(self):
+        self.__housebuilder = None
+
+    @property
+    def housebuilder(self):
+        return self.__housebuilder
+
+    @housebuilder.setter
+    def housebuilder(self, value_):
+        self.__housebuilder = value_
+
+    def get_house(self):
+        return self.__housebuilder.build()
+
+    def build_full_house(self):
+        self.__housebuilder.build_basement()
+        self.__housebuilder.build_structure()
+        self.__housebuilder.build_roof()
+        self.__housebuilder.build_interior()
+
+    def build_basement_only(self):
+        self.__housebuilder.build_basement()
+
+    def build_structure_only(self):
+        self.__housebuilder.build_structure()
+
+    def build_roof_only(self):
+        self.__housebuilder.build_roof()
+
+    def build_interior_only(self):
+        self.__housebuilder.build_interior()
 
 
 if __name__ == "__main__":
-    student_builder1 = StudentConcreteBuilder()\
-        .set_id(1)\
-        .set_firstname("Nhan")\
-        .set_lastname("Nguyen")
-    student1 = student_builder1.build()
-    print(student1)
+    house_director = HouseDirector()
 
-    student_builder2 = StudentConcreteBuilder()\
-        .set_id(2)\
-        .set_firstname("Tom")\
-        .set_lastname("Jerry")\
-        .set_phone("0123")
-    student2 = student_builder2.build()
-    print(student2)
+    print("Igloo house:")
+    igloo_house_builder = IglooHouseBuilder()
+    house_director.housebuilder = igloo_house_builder
+    house_director.build_full_house()
+    house = house_director.get_house()
+    print(f"Full house: {house}")
+
+    house_director.build_basement_only()
+    house = house_director.get_house()
+    print(f"Basement only house: {house}")
+
+    house_director.build_structure_only()
+    house = house_director.get_house()
+    print(f"Structure only house: {house}")
+
+    house_director.build_roof_only()
+    house = house_director.get_house()
+    print(f"Roof only house: {house}")
+
+    house_director.build_interior_only()
+    house = house_director.get_house()
+    print(f"Interior only house: {house}")
+
+    print("*" * 50)
+
+    print("Tipi house:")
+    tipi_house_builder = TipiHouseBuilder()
+    house_director.housebuilder = tipi_house_builder
+    house_director.build_full_house()
+    house = house_director.get_house()
+    print(f"Full house: {house}")
+
+    house_director.build_basement_only()
+    house = house_director.get_house()
+    print(f"Basement only house: {house}")
+
+    house_director.build_structure_only()
+    house = house_director.get_house()
+    print(f"Structure only house: {house}")
+
+    house_director.build_roof_only()
+    house = house_director.get_house()
+    print(f"Roof only house: {house}")
+
+    house_director.build_interior_only()
+    house = house_director.get_house()
+    print(f"Interior only house: {house}")
