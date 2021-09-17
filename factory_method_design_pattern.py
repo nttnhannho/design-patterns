@@ -63,8 +63,7 @@ class SpeciesFactory:
 
 
 if __name__ == "__main__":
-    factory = SpeciesFactory()
-    species = factory.get_species("Coffee")
+    species = SpeciesFactory.get_species("Coffee")
     print(species.show_name())
-    species = factory.get_species("Tree")
+    species = SpeciesFactory.get_species("Tree")
     print(species.show_name())
