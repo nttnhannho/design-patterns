@@ -44,7 +44,7 @@ class Durian(Species):
 
 class NoneSpecies(Species):
     def show_name(self):
-        return "Invalid species"
+        pass
 
 
 class SpeciesFactory:
@@ -65,5 +65,8 @@ class SpeciesFactory:
 if __name__ == "__main__":
     species = SpeciesFactory.get_species("Coffee")
     print(species.show_name())
-    species = SpeciesFactory.get_species("Tree")
-    print(species.show_name())
+    species = SpeciesFactory.get_species("null")
+    if not isinstance(species, NoneSpecies):
+        print(species.show_name())
+    else:
+        print("Invalid species")
