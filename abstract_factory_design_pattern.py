@@ -3,6 +3,9 @@ from enum import Enum
 
 
 class Chair(ABC):
+    """
+    Chair has 2 types: Plastic and Wood.
+    """
     @abstractmethod
     def create(self):
         pass
@@ -19,6 +22,9 @@ class WoodChair(Chair):
 
 
 class Table(ABC):
+    """
+    Table has 2 types: Plastic and Wood.
+    """
     @abstractmethod
     def create(self):
         pass
@@ -35,6 +41,11 @@ class WoodTable(Table):
 
 
 class FurnitureAbstractFactory(ABC):
+    """
+    FurnitureAbstractFactory supports to create chair and table.
+    FurnitureAbstractFactory has 2 types of material: PlasticFactory and WoodFactory.
+    We also defined a none type material. This one will be mentioned clearly in Null object design pattern.
+    """
     @abstractmethod
     def create_chair(self):
         pass
@@ -74,6 +85,9 @@ class MaterialType(Enum):
 
 
 class FurnitureFactory:
+    """
+    The factory decides which factory will be used to create chair and table.
+    """
     @staticmethod
     def get_furniture(material_type_):
         switcher = {
@@ -84,19 +98,19 @@ class FurnitureFactory:
 
 
 if __name__ == "__main__":
-    factory = FurnitureFactory.get_furniture(MaterialType.PLASTIC.value)
-    chair = factory.create_chair()
+    factory = FurnitureFactory.get_furniture(MaterialType.PLASTIC.value)  # Create plastic factory
+    chair = factory.create_chair()  # Create plastic chair
     print(chair.create())
-    table = factory.create_table()
+    table = factory.create_table()  # Create plastic table
     print(table.create())
 
-    factory = FurnitureFactory.get_furniture(MaterialType.WOOD.value)
-    chair = factory.create_chair()
+    factory = FurnitureFactory.get_furniture(MaterialType.WOOD.value)  # Create wood factory
+    chair = factory.create_chair()  # Create wood chair
     print(chair.create())
-    table = factory.create_table()
+    table = factory.create_table()  # Create wood table
     print(table.create())
 
-    factory = FurnitureFactory.get_furniture("null")
+    factory = FurnitureFactory.get_furniture("null")  # Create none type factory
     if not isinstance(factory, NoneMaterialType):
         chair = factory.create_chair()
         print(chair.create())

@@ -2,6 +2,11 @@ from abc import ABC, abstractmethod
 
 
 class Species(ABC):
+    """
+    Species contains 7 types: Coffee, Pepper, Rubber, Orange, Longan, Mango and Durian.
+    The None type species is the special one represented for a none type species.
+    This one is mentioned in Null object design pattern.
+    """
     @abstractmethod
     def show_name(self):
         pass
@@ -48,6 +53,10 @@ class NoneSpecies(Species):
 
 
 class SpeciesFactory:
+    """
+    The factory will define which species will be created based on input type.
+    If the input type is invalid, return a None type species.
+    """
     @staticmethod
     def get_species(type_):
         switcher = {

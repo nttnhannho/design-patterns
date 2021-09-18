@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 
 
 class House:
+    """
+    House contains its own parts to be built.
+    """
     def __init__(self):
         self.__parts = []
 
@@ -13,6 +16,9 @@ class House:
 
 
 class HouseBuilder(ABC):
+    """
+    House builder contains 2 types: Igloo and Tipi
+    """
     @abstractmethod
     def build_basement(self):
         pass
@@ -85,6 +91,10 @@ class TipiHouseBuilder(HouseBuilder):
 
 
 class HouseDirector:
+    """
+    House director will define how a house can be built.
+    We have 5 ways: full house, only basement, only structure, only roof and only interior.
+    """
     def __init__(self):
         self.__housebuilder = None
 
@@ -119,52 +129,52 @@ class HouseDirector:
 
 
 if __name__ == "__main__":
-    house_director = HouseDirector()
+    house_director = HouseDirector()  # Create a director
 
     print("Igloo house:")
-    igloo_house_builder = IglooHouseBuilder()
+    igloo_house_builder = IglooHouseBuilder()  # Create an Igloo house builder
     house_director.housebuilder = igloo_house_builder
-    house_director.build_full_house()
+    house_director.build_full_house()  # Build full Igloo house
     house = house_director.get_house()
     print(f"Full house: {house}")
 
-    house_director.build_basement_only()
+    house_director.build_basement_only()  # Build basement only Igloo house
     house = house_director.get_house()
     print(f"Basement only house: {house}")
 
-    house_director.build_structure_only()
+    house_director.build_structure_only()  # Build structure only Igloo house
     house = house_director.get_house()
     print(f"Structure only house: {house}")
 
-    house_director.build_roof_only()
+    house_director.build_roof_only()  # Build roof only Igloo house
     house = house_director.get_house()
     print(f"Roof only house: {house}")
 
-    house_director.build_interior_only()
+    house_director.build_interior_only()  # Build interior only Igloo house
     house = house_director.get_house()
     print(f"Interior only house: {house}")
 
     print("*" * 50)
 
     print("Tipi house:")
-    tipi_house_builder = TipiHouseBuilder()
+    tipi_house_builder = TipiHouseBuilder()  # Create a Tipi house builder
     house_director.housebuilder = tipi_house_builder
-    house_director.build_full_house()
+    house_director.build_full_house()  # Build full Tipi house
     house = house_director.get_house()
     print(f"Full house: {house}")
 
-    house_director.build_basement_only()
+    house_director.build_basement_only()  # Build basement only Tipi house
     house = house_director.get_house()
     print(f"Basement only house: {house}")
 
-    house_director.build_structure_only()
+    house_director.build_structure_only()  # Build structure only Tipi house
     house = house_director.get_house()
     print(f"Structure only house: {house}")
 
-    house_director.build_roof_only()
+    house_director.build_roof_only()  # Build roof only Tipi house
     house = house_director.get_house()
     print(f"Roof only house: {house}")
 
-    house_director.build_interior_only()
+    house_director.build_interior_only()  # Build interior only Tipi house
     house = house_director.get_house()
     print(f"Interior only house: {house}")
