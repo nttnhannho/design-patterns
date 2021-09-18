@@ -19,17 +19,20 @@ class SingletonMeta(type):
 
 
 class LoggingSingleton(metaclass=SingletonMeta):
+    """
+    Logging class
+    """
     pass
 
 
 def test():
-    logging_singleton = LoggingSingleton()
+    logging_singleton = LoggingSingleton()  # Create a logging object
     print(logging_singleton)
     print(id(logging_singleton))
 
 
 if __name__ == "__main__":
-    p1 = Thread(target=test)
-    p2 = Thread(target=test)
-    p1.start()
-    p2.start()
+    p1 = Thread(target=test)  # Thread 1
+    p2 = Thread(target=test)  # Thread 2
+    p1.start()  # Start thread 1
+    p2.start()  # Start thread 2
