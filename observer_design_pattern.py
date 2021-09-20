@@ -2,6 +2,10 @@ from abc import ABC, abstractmethod
 
 
 class Subject(ABC):
+    """
+    Subject for observers.
+    Contains 3 default methods: attach, detach and notify observers.
+    """
     @abstractmethod
     def attach(self, observer_):
         pass
@@ -16,6 +20,9 @@ class Subject(ABC):
 
 
 class VideoSubject(Subject):
+    """
+    Video subject
+    """
     __observers = []
 
     def attach(self, observer_):
@@ -30,9 +37,16 @@ class VideoSubject(Subject):
 
 
 class Observer(ABC):
+    """
+    Observer has 3 types: email, phone and facebook.
+    """
     def __init__(self, subject_):
-        self._subject = subject_
-        self._subject.attach(self)
+        self.__subject = subject_
+        self.__subject.attach(self)
+
+    @property
+    def subject(self):
+        return self.__subject
 
     @abstractmethod
     def update(self):
@@ -41,26 +55,29 @@ class Observer(ABC):
 
 class VideoDataEmailNotifier(Observer):
     def update(self):
-        if isinstance(self._subject, VideoData):
+        if isinstance(self.subject, VideoData):
             print("To email:")
-            print(f"{self._subject.title}\n{self._subject.description}")
+            print(f"{self.subject.title}\n{self.subject.description}")
 
 
 class VideoDataPhoneNotifier(Observer):
     def update(self):
-        if isinstance(self._subject, VideoData):
+        if isinstance(self.subject, VideoData):
             print("To Phone:")
-            print(f"{self._subject.title}\n{self._subject.description}")
+            print(f"{self.subject.title}\n{self.subject.description}")
 
 
 class VideoDataFacebookNotifier(Observer):
     def update(self):
-        if isinstance(self._subject, VideoData):
+        if isinstance(self.subject, VideoData):
             print("To Facebook:")
-            print(f"{self._subject.title}\n{self._subject.description}")
+            print(f"{self.subject.title}\n{self.subject.description}")
 
 
 class VideoData(VideoSubject):
+    """
+    Video data class.
+    """
     def __init__(self):
         self.__title = None
         self.__description = None
@@ -86,23 +103,23 @@ class VideoData(VideoSubject):
 
 
 if __name__ == "__main__":
-    subject = VideoSubject()
+    subject = VideoSubject()  # Create a video subject
 
-    video_data = VideoData()
+    video_data = VideoData()  # Create a video data
 
-    email = VideoDataEmailNotifier(video_data)
-    phone = VideoDataPhoneNotifier(video_data)
+    email = VideoDataEmailNotifier(video_data)  # Attach email notifier to video data
+    phone = VideoDataPhoneNotifier(video_data)  # Attach phone notifier to video data
 
-    video_data.title = "Video for Observer Design Pattern"
-    video_data.description = "Observer is a good design pattern"
-    video_data.video_data_changed()
+    video_data.title = "Video for Observer Design Pattern" # Change title
+    video_data.description = "Observer is a good design pattern"  # Change description
+    video_data.video_data_changed()  # Call video data changed to notify to all notifiers (email, phone).
 
     print("*** After detach phone notifier ***")
-    subject.detach(phone)
+    subject.detach(phone)  # Detach phone notifier from video data
     video_data.title = "Video for Observer Design Pattern by Nhan"
     video_data.description = "Observer is a good design pattern, medium difficulty level"
-    video_data.video_data_changed()
+    video_data.video_data_changed()  # Call video data changed to notify to all notifiers (email).
 
     print("*** After attach facebook notifier")
-    facebook = VideoDataFacebookNotifier(video_data)
-    video_data.video_data_changed()
+    facebook = VideoDataFacebookNotifier(video_data)  # Attach facebook notifier to video data
+    video_data.video_data_changed()  # Call video data changed to notify to all notifiers (email, facebook).
