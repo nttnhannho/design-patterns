@@ -1,81 +1,45 @@
 from abc import ABC, abstractmethod
 
 
-class Species(ABC):
-    """
-    Species contains 7 types: Coffee, Pepper, Rubber, Orange, Longan, Mango and Durian.
-    The None type species is the special one represented for a none type species.
-    This one is mentioned in Null object design pattern.
-    """
-    @abstractmethod
-    def show_name(self):
-        pass
+class Transportation(ABC):
+    def __init__(self, name, doors, price, customer_info=None):
+        self.name = name
+        self.doors = doors
+        self.price = price
+        self.customer_info = customer_info
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}(name={self.name}, doors={self.doors}, price={self.price}, customer_info={self.customer_info})'
 
 
-class Coffee(Species):
-    def show_name(self):
-        return "Coffee"
+class Car(Transportation):
+    def __init__(self, name='XL7', doors='4', price='600.000.000 VND', customer_info=None):
+        super().__init__(name, doors, price, customer_info)
 
 
-class Pepper(Species):
-    def show_name(self):
-        return "Pepper"
+class ServiceLogistics:
+    transportation_class = Car
+
+    @classmethod
+    def get_transport(cls, customer_info):
+        return cls.transportation_class(customer_info=customer_info)
 
 
-class Rubber(Species):
-    def show_name(self):
-        return "Rubber"
+class Truck(Transportation):
+    def __init__(self, name='Container 2024', doors='2', price='3.000.000.000 VND', customer_info=None):
+        super().__init__(name, doors, price, customer_info)
 
 
-class Orange(Species):
-    def show_name(self):
-        return "Orange"
+class TrucServiceLogistics(ServiceLogistics):
+    transportation_class = Truck
 
 
-class Longan(Species):
-    def show_name(self):
-        return "Longan"
+def main():
+    car_service = ServiceLogistics()
+    print(car_service.get_transport(customer_info={'name': 'nhan'}))
+    truck_service = TrucServiceLogistics()
+    print(truck_service.get_transport(customer_info={'name': 'futaro'}))
 
 
-class Mango(Species):
-    def show_name(self):
-        return "Mango"
-
-
-class Durian(Species):
-    def show_name(self):
-        return "Durian"
-
-
-class NoneSpecies(Species):
-    def show_name(self):
-        pass
-
-
-class SpeciesFactory:
-    """
-    The factory will define which species will be created based on input type.
-    If the input type is invalid, return a None type species.
-    """
-    @staticmethod
-    def get_species(type_):
-        switcher = {
-            "Coffee": Coffee(),
-            "Pepper": Pepper(),
-            "Rubber": Rubber(),
-            "Orange": Orange(),
-            "Longan": Longan(),
-            "Mango": Mango(),
-            "Durian": Durian()
-        }
-        return switcher.get(type_, NoneSpecies())
-
-
-if __name__ == "__main__":
-    species = SpeciesFactory.get_species("Coffee")
-    print(species.show_name())
-    species = SpeciesFactory.get_species("null")
-    if not isinstance(species, NoneSpecies):
-        print(species.show_name())
-    else:
-        print("Invalid species")
+if __name__ == '__main__':
+    main()
