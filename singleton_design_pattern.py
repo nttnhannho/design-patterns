@@ -18,21 +18,47 @@ class SingletonMeta(type):
         return cls.__instances[cls]
 
 
-class LoggingSingleton(metaclass=SingletonMeta):
-    """
-    Logging class
-    """
-    pass
+class RoundRobin(metaclass=SingletonMeta):
+    def __init__(self):
+        self.servers = []
+        self.index = 0
+
+    def add_server(self, server):
+        self.servers.append(server)
+
+    def get_next_server(self):
+        num_server = len(self.servers)
+        if not num_server:
+            raise Exception('No available server')
+        server = self.servers[self.index]
+        self.index = (self.index + 1) % num_server
+
+        return server
+
+    @staticmethod
+    def get_instance():
+        return RoundRobin()
 
 
-def test():
-    logging_singleton = LoggingSingleton()  # Create a logging object
-    print(logging_singleton)
-    print(id(logging_singleton))
+def main():
+    load_balancer_1 = RoundRobin()
+    load_balancer_2 = RoundRobin()
+    load_balancer_3 = RoundRobin.get_instance()
+    print(load_balancer_1 is load_balancer_2)
+    print(load_balancer_1 is load_balancer_3)
+
+    load_balancer_1.add_server('Server 1')
+    load_balancer_1.add_server('Server 2')
+    load_balancer_1.add_server('Server 3')
+    print(load_balancer_1.get_next_server())
+    print(load_balancer_1.get_next_server())
+    print(load_balancer_1.get_next_server())
+    print(load_balancer_1.get_next_server())
+    print(load_balancer_1.get_next_server())
 
 
 if __name__ == "__main__":
-    p1 = Thread(target=test)  # Thread 1
-    p2 = Thread(target=test)  # Thread 2
-    p1.start()  # Start thread 1
-    p2.start()  # Start thread 2
+    p1 = Thread(target=main)
+    p2 = Thread(target=main)
+    p1.start()
+    p2.start()
