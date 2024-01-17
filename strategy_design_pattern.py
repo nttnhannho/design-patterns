@@ -1,97 +1,66 @@
 from abc import ABC, abstractmethod
 
 
-class OperationStrategy(ABC):
-    """
-    Operation contains 4 types: addition, subtraction, multiplication, division.
-    """
+class PromotionStrategy(ABC):
+    def __init__(self, price):
+        self.price = price
+
     @abstractmethod
-    def operate(self, num_a, num_b):
+    def do_promotion(self):
         pass
 
 
-class Addition(OperationStrategy):
-    """
-    Addition
-    """
-    def operate(self, num_a, num_b):
-        return num_a + num_b
+class NewYearPromotion(PromotionStrategy):
+    def __init__(self, price):
+        super().__init__(price)
+
+    def do_promotion(self):
+        return self.price * 0.5
 
 
-class Subtraction(OperationStrategy):
-    """
-    Subtraction
-    """
-    def operate(self, num_a, num_b):
-        return num_a - num_b
+class BlackFridayPromotion(PromotionStrategy):
+    def __init__(self, price):
+        super().__init__(price)
+
+    def do_promotion(self):
+        return self.price * 0.1
 
 
-class Multiplication(OperationStrategy):
-    """
-    Multiplication
-    """
-    def operate(self, num_a, num_b):
-        return num_a * num_b
+class FifthOfMayPromotion(PromotionStrategy):
+    def __init__(self, price):
+        super().__init__(price)
+
+    def do_promotion(self):
+        return self.price * 0.8
 
 
-class Division(OperationStrategy):
-    """
-    Division
-    """
-    def operate(self, num_a, num_b):
-        if num_b == 0:
-            raise ZeroDivisionError
-        return num_a / num_b
-
-
-class OperationContext:
-    """
-    Defines which operation will be used and be able to modify the operation in runtime.
-    """
-    def __init__(self, strategy_):
-        self.__strategy = strategy_
-
-    def __str__(self):
-        return self.__strategy.__class__.__name__
+class PromotionContext:
+    def __init__(self, strategy):
+        self.__strategy = strategy
 
     @property
     def strategy(self):
         return self.__strategy
 
     @strategy.setter
-    def strategy(self, value_):
-        """
-        Set which operation will be used
-        :param value_: operation
-        :return: None
-        """
-        self.__strategy = value_
+    def strategy(self, strategy):
+        self.__strategy = strategy
 
-    def do_operation(self, num_a, num_b):
-        """
-        Do the operation on number a and b
-        :param num_a: number a
-        :param num_b: number b
-        :return: result of the operation on number a and b
-        """
-        return self.__strategy.operate(num_a, num_b)
+    def get_price(self):
+        return self.__strategy.do_promotion()
 
 
-if __name__ == "__main__":
-    a = 10
-    b = 5
+def main():
+    promotion_new_year = NewYearPromotion(100)
+    promotion_context = PromotionContext(promotion_new_year)
+    print(promotion_context.get_price())
 
-    try:
-        context = OperationContext(Addition())
-        print(f"{context} = {context.do_operation(a, b)}")
+    promotion_context.strategy = BlackFridayPromotion(100)
+    print(promotion_context.get_price())
 
-        context.strategy = Subtraction()
-        print(f"{context} = {context.do_operation(a, b)}")
+    promotion_context.strategy = FifthOfMayPromotion(100)
+    print(promotion_context.get_price())
 
-        context.strategy = Multiplication()
-        print(f"{context} = {context.do_operation(a, b)}")
 
-        context.strategy = Division()
-        print(f"{context} = {context.do_operation(a, b)}")
-    except ZeroDivisionError:
-        print(f"Division = Can not divide by zero !!")
+if __name__ == '__main__':
+    main()
