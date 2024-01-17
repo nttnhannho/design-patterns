@@ -17,12 +17,16 @@ class Car(Transportation):
         super().__init__(name, doors, price, customer_info)
 
 
-class ServiceLogistics:
-    transportation_class = Car
+class ServiceLogisticsFactory(ABC):
+    transportation_class = None
 
     @classmethod
     def get_transport(cls, customer_info):
         return cls.transportation_class(customer_info=customer_info)
+
+
+class CarService(ServiceLogisticsFactory):
+    transportation_class = Car
 
 
 class Truck(Transportation):
@@ -30,14 +34,14 @@ class Truck(Transportation):
         super().__init__(name, doors, price, customer_info)
 
 
-class TrucServiceLogistics(ServiceLogistics):
+class TrucService(ServiceLogisticsFactory):
     transportation_class = Truck
 
 
 def main():
-    car_service = ServiceLogistics()
+    car_service = CarService()
     print(car_service.get_transport(customer_info={'name': 'nhan'}))
-    truck_service = TrucServiceLogistics()
+    truck_service = TrucService()
     print(truck_service.get_transport(customer_info={'name': 'futaro'}))
 
 
